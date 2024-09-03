@@ -1,7 +1,23 @@
 package main
 
-import "fmt"
+import (
+	"net/http"
+
+	c "hello-go-deploy/controller"
+
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+)
 
 func main() {
-	fmt.Println("hello world")
+	e := echo.New()
+
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
+	e.GET("/list", c.List)
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Hello, World!")
+	})
+	e.Logger.Fatal(e.Start(":1323"))
 }
